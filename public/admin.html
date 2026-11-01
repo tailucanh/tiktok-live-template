@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Chùa Linh Ứng TikTok Live Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Noto+Serif:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1015;
+      --card-bg: #181a22;
+      --card-alt: #13141b;
+      --border: rgba(245, 158, 11, 0.22);
+      --border-hover: rgba(245, 158, 11, 0.55);
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+      --gold-bright: #fbbf24;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #10b981;
+      --green-dark: #064e3b;
+      --red: #ef4444;
+      --red-dark: #450a0a;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e1b26 0%, #0c0d12 80%);
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .dashboard {
+      max-width: 1720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: max-width 0.3s ease;
+    }
+
+    /* TOP HEADER */
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 26px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+      border: 1.5px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+    }
+    .header-title {
+      font-family: 'Noto Serif', serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 0.5px;
+    }
+    .header-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* QUICK STATS CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .stat-info-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-info-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gold-bright);
+      margin-top: 2px;
+    }
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    /* NAVIGATION TABS */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 2px;
+    }
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.18s ease;
+      position: relative;
+    }
+    .nav-tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .nav-tab-btn.active {
+      color: var(--gold-bright);
+      font-weight: 700;
+      background: rgba(245, 158, 11, 0.1);
+      border-bottom: 2px solid var(--gold);
+    }
+    .tab-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--gold-bright);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* TAB CONTENT PANES */
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* GRID LAYOUTS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 12px;
+    }
+    .card-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-badge {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* INPUTS & BUTTONS */
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .input-field {
+      width: 100%;
+      background: #0f1118;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      padding: 11px 15px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input-field:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn {
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #252836;
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 13.5px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: #2f3344;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .btn:active {
+      transform: scale(0.97);
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #fff;
+      border-color: #f59e0b;
+      box-shadow: 0 2px 10px rgba(217, 119, 6, 0.35);
+    }
+    .btn.primary:hover {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+    .btn.green {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #fff;
+      border-color: #10b981;
+    }
+    .btn.danger {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: #fff;
+      border-color: #ef4444;
+    }
+    .btn.small {
+      padding: 6px 12px;
+      font-size: 12.5px;
+      border-radius: 6px;
+    }
+
+    /* SWITCH TOGGLE */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+    }
+    .switch-label-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .switch-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .switch-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #334155;
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--gold);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    /* YOUTUBE PLAYER CARD */
+    .yt-presets-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .yt-preset-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: all 0.15s ease;
+    }
+    .yt-preset-btn:hover {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+    .yt-preset-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .yt-preset-desc {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* RITUAL BUTTONS GRID */
+    .ritual-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .ritual-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(245, 158, 11, 0.18);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+    .ritual-btn:hover {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+    .ritual-btn-icon {
+      font-size: 24px;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ritual-btn-texts {
+      display: flex;
+      flex-direction: column;
+    }
+    .ritual-btn-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .ritual-btn-sub {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    /* DEVOTEES TABLE */
+    .table-container {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+    thead {
+      background: #11131a;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    th {
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--gold-light);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .devotee-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold);
+      background: #3b160e;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gold-light);
+      overflow: hidden;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .devotee-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+    .rank-badge.vip {
+      color: #fbbf24;
+    }
+
+    /* TOAST ALERT */
+    #adminToast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      background: #1e293b;
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 9999;
+      pointer-events: none;
+    }
+    #adminToast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* JSON-RPC LOG BOX */
+    pre {
+      background: #090a0f;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-size: 12px;
+      color: #34d399;
+      overflow-x: auto;
+      max-height: 240px;
+      font-family: Consolas, monospace;
+    }
+
+    /* AUDIO ROUTING GUIDE STYLES */
+    .audio-guide-card {
+      background: linear-gradient(145deg, rgba(30, 27, 46, 0.95), rgba(18, 16, 28, 0.95));
+      border: 1.5px solid rgba(168, 85, 247, 0.45);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.15);
+    }
+    .guide-step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .guide-step-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+    .guide-step-box.highlight {
+      border-color: rgba(245, 158, 11, 0.65);
+      background: rgba(245, 158, 11, 0.07);
+    }
+    .guide-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #120403;
+      font-weight: 900;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .guide-step-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .guide-step-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .audio-status-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .audio-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .audio-status-pill.shield {
+      background: rgba(168, 85, 247, 0.15);
+      color: #d8b4fe;
+      border-color: rgba(168, 85, 247, 0.35);
+    }
+    /* MAIN SPLIT LAYOUT (CONTROLS + LIVE MONITOR) */
+    .dashboard-main-split {
+      display: grid;
+      grid-template-columns: 1fr 410px;
+      gap: 24px;
+      align-items: start;
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-main-split.monitor-hidden {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-main-split.monitor-hidden .live-monitor-panel {
+      display: none;
+    }
+
+    .dashboard-tabs-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    /* LIVE MONITOR PANEL */
+    .live-monitor-panel {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .monitor-card {
+      background: var(--card-bg);
+      border: 1.5px solid rgba(245, 158, 11, 0.45);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 32px rgba(245, 158, 11, 0.15);
+    }
+
+    .monitor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .monitor-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--gold-bright);
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pulse-live-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+      animation: pulseLiveDot 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseLiveDot {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px #ef4444; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+
+    .monitor-header-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-tool-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .icon-tool-btn:hover {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--gold);
+      color: var(--gold-bright);
+      transform: translateY(-1px);
+    }
+    .icon-tool-btn.active {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--green);
+      color: #6ee7b7;
+    }
+
+    /* 9:16 PREVIEW SCREEN */
+    .monitor-screen-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      border: 2px solid rgba(245, 158, 11, 0.35);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .monitor-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      pointer-events: auto;
+    }
+
+    .monitor-footer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .monitor-quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .monitor-status-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 8px;
+    }
+
+    .monitor-badge-safe {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* PREVIEW HERO IN TAB 5 */
+    .preview-hero-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-main-split {
+        grid-template-columns: 1fr;
+      }
+      .live-monitor-panel {
+        position: relative;
+        top: 0;
+        max-width: 440px;
+        margin: 0 auto;
+      }
+      .preview-hero-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* SCENE SWITCHER CARDS */
+    .scene-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 12px 0;
+    }
+    @media (max-width: 900px) {
+      .scene-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .scene-card {
+      background: rgba(18, 12, 8, 0.85);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .scene-card:hover {
+      border-color: rgba(245, 158, 11, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    .scene-card.active {
+      border-color: var(--gold);
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.18) 0%, rgba(18, 12, 8, 0.95) 100%);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+    }
+    .scene-thumb-wrap {
+      position: relative;
+      width: 100%;
+      height: 140px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      background: #000;
+    }
+    .scene-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform 0.3s ease;
+    }
+    .scene-card:hover .scene-thumb {
+      transform: scale(1.05);
+    }
+    .scene-check {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #10b981;
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      display: none;
+    }
+    .scene-card.active .scene-check {
+      display: block;
+    }
+    .scene-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .scene-card.active .scene-name {
+      color: var(--gold-bright);
+    }
+    .scene-sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="header-branding">
+        <div class="header-logo">🪷</div>
+        <div>
+          <div class="header-title">CHÙA LINH ỨNG — ADMIN DASHBOARD</div>
+          <div class="header-subtitle" id="statusBanner">
+            <span>Đang kết nối hệ thống...</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn gold" id="btnToggleLiveMonitor" onclick="toggleLiveMonitor()">
+          📺 <span id="lblLiveMonitor">Xem Trước Chánh Điện</span>
+        </button>
+        <button class="btn" id="btnCopyObsLink" onclick="copyObsUrl()">
+          📋 Copy Link OBS
+        </button>
+        <a class="btn primary" href="/" target="_blank" title="Mở Chánh Điện toàn cảnh ở tab mới">
+          🪷 Mở Chánh Điện ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- HÀNG THỐNG KÊ NHANH -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div>
+          <div class="stat-info-title">Trạng Thái Live</div>
+          <div class="stat-info-val" id="statLiveStatus" style="font-size: 18px; color: #ef4444;">Offline</div>
+        </div>
+        <div class="stat-icon">📡</div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <div class="stat-info-title">Thí Chủ Trong Điện</div>
+          <div class="stat-info-val" id="statDevoteeCount">0</div>
+        </div>
+        <div class="stat-icon">👥</div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <div class="stat-info-title">Nén Hương Đã Thắp</div>
+          <div class="stat-info-val" id="statTotalIncense">0</div>
+        </div>
+        <div class="stat-icon">🔥</div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <div class="stat-info-title">Tổng Điểm Công Đức</div>
+          <div class="stat-info-val" id="statTotalMerit">0</div>
+        </div>
+        <div class="stat-icon">✨</div>
+      </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <nav class="nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchTab('tabControls')">
+        🎛️ 1. Điều Khiển Live & Âm Nhạc
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('tabDevotees')">
+        👥 2. Đạo Tràng & Thí Chủ <span class="tab-badge" id="tabSeatBadge">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('tabRituals')">
+        🙏 3. Nghi Thức Tâm Linh Nhanh
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('tabLogs')">
+        💬 4. Kiểm Thử & Nhật Ký
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('tabLivePreview')">
+        📺 5. Màn Hình Chánh Điện (Full Studio)
+      </button>
+    </nav>
+
+    <div class="dashboard-main-split" id="dashboardMainSplit">
+      <div class="dashboard-tabs-column">
+
+    <!-- ====================================================================
+         TAB 1: ĐIỀU KHIỂN LIVE & NHẠC YOUTUBE
+         ==================================================================== -->
+    <div class="tab-pane active" id="tabControls">
+      <!-- 🪷 4 BỐI CẢNH CHÁNH ĐIỆN ĐA DẠNG NGUYÊN BẢN & CHÚ TIỂU 3D -->
+      <section class="card scene-switcher-card" style="border-color: rgba(245, 158, 11, 0.65); background: linear-gradient(180deg, rgba(30, 20, 10, 0.85) 0%, rgba(20, 12, 6, 0.95) 100%);">
+        <div class="card-head">
+          <div class="card-title">🪷 4 Bối Cảnh Chánh Điện Nguyên Bản & Nhân Vật 3D Hoạt Hình</div>
+          <div class="card-badge" id="currentSceneBadge">Bối cảnh: Đức Phật A Di Đà</div>
+        </div>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">
+          Tôn tượng Phật & Chùa giữ nguyên bản 100% trang nghiêm thanh tịnh. Chú Tiểu & Thí Chủ 3D cử động mượt mà 60 FPS. Bấm 1-click để đổi cảnh realtime trên toàn bộ OBS và người xem:
+        </p>
+        <div class="scene-grid-4">
+          <div class="scene-card active" data-scene="amitabha" onclick="selectScene('amitabha')">
+            <div class="scene-thumb-wrap">
+              <img src="/assets/amitabha_stage.jpg" alt="A Di Đà" class="scene-thumb" />
+              <div class="scene-check">✓ ĐANG LIVE</div>
+            </div>
+            <div class="scene-name">🪷 Đức Phật A Di Đà</div>
+            <div class="scene-sub">Chánh Điện Trang Nghiêm • Hào Quang Tiếp Dẫn</div>
+          </div>
+
+          <div class="scene-card" data-scene="shakyamuni" onclick="selectScene('shakyamuni')">
+            <div class="scene-thumb-wrap">
+              <img src="/assets/shakyamuni_stage.jpg" alt="Thích Ca Mâu Ni" class="scene-thumb" />
+              <div class="scene-check">✓ ĐANG LIVE</div>
+            </div>
+            <div class="scene-name">🌿 Cội Bồ Đề Thích Ca</div>
+            <div class="scene-sub">Đức Bổn Sư Thành Đạo • Vầng Sáng Trí Tuệ</div>
+          </div>
+
+          <div class="scene-card" data-scene="avalokiteshvara" onclick="selectScene('avalokiteshvara')">
+            <div class="scene-thumb-wrap">
+              <img src="/assets/avalokiteshvara_stage.jpg" alt="Quán Thế Âm" class="scene-thumb" />
+              <div class="scene-check">✓ ĐANG LIVE</div>
+            </div>
+            <div class="scene-name">🌊 Phổ Đà Quán Âm</div>
+            <div class="scene-sub">Biển Mây Bồng Bềnh • Bình Cam Lộ Cứu Khổ</div>
+          </div>
+
+          <div class="scene-card" data-scene="lantern" onclick="selectScene('lantern')">
+            <div class="scene-thumb-wrap">
+              <img src="/assets/amitabha_stage.jpg" alt="Đại Lễ Hoa Đăng" class="scene-thumb" />
+              <div class="scene-check">✓ ĐANG LIVE</div>
+            </div>
+            <div class="scene-name">🏮 Đêm Đại Lễ Hoa Đăng</div>
+            <div class="scene-sub">Muôn Đèn Tỏa Sáng • Cầu An Lạc Cát Tường</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 14px; gap: 10px; align-items: center; border-top: 1px dashed rgba(245, 158, 11, 0.25); padding-top: 12px;">
+          <span style="font-size: 13.5px; font-weight: 600; color: var(--gold-bright);">Tương tác Nhân vật:</span>
+          <button class="btn gold" onclick="testMonkStrike()">🪵 Thử Chú Tiểu Gõ Mõ (+1 CĐ)</button>
+          <button class="btn" onclick="testDevoteeProstrate()">🙏 Thử Thí Chủ Dâng Hương Lạy Tam Bái</button>
+        </div>
+      </section>
+
+      <!-- QUẢN LÝ CHÀO MỪNG -->
+      <section class="card" style="border-color: rgba(245, 158, 11, 0.45);">
+        <div class="card-head">
+          <div class="card-title">🪷 Chào Mừng Thí Chủ Vào Chánh Điện (Welcome System)</div>
+          <div class="card-badge">Chỉ cần vào live là có chỗ ngồi & thẻ tên</div>
+        </div>
+        <div class="row">
+          <input type="text" id="welcomeDevoteeInput" class="input-field" value="Thí Chủ Thiện Tâm" placeholder="Nhập tên Thí Chủ cần chào mừng..." />
+          <button class="btn primary" id="btnSendWelcome">📢 Gửi Lời Chào Mừng Lên Màn Hình</button>
+          <button class="btn green" id="btnWelcomeAll">✨ Chào Đón Toàn Bộ Khán Giả</button>
+        </div>
+        <div class="grid-2">
+          <div class="switch-row">
+            <div class="switch-label-wrap">
+              <span class="switch-title">Tự động Chào mừng khi có người mới vào xem</span>
+              <span class="switch-desc">Hiện banner chào mừng kèm tiếng chuông ngọc trên OBS</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="checkAutoWelcome" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label-wrap">
+              <span class="switch-title">Tự động Giả lập Người xem (Auto Sim)</span>
+              <span class="switch-desc">Tự tạo tương tác dâng hương/thả đèn khi phòng live vắng khách</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="checkAutoSim" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label-wrap">
+              <span class="switch-title">🛡️ Chế độ An Toàn TikTok Mobile (Safe Zone)</span>
+              <span class="switch-desc">Tự động co dời giao diện vào vùng an toàn, không bị Avatar, Khung chat và Nút quà TikTok che khuất</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="checkTiktokSafeMode" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label-wrap">
+              <span class="switch-title">📐 Hiển thị Lưới Căn Chỉnh Vùng An Toàn TikTok</span>
+              <span class="switch-desc">Hiện khung đứt nét minh họa vị trí các nút app TikTok trên màn hình OBS để dễ căn góc</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="checkSafeZoneGuide" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRÌNH PHÁT NHẠC YOUTUBE TRỰC TIẾP -->
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title">🎵 Nhạc Nền YouTube Trực Tiếp (Headless Background Audio)</div>
+          <div class="card-badge" id="ytStatusBadge">Trạng thái: Nhạc Chùa Mặc Định</div>
+        </div>
+        <div class="row">
+          <input type="text" id="ytUrlInput" class="input-field" value="https://www.youtube.com/watch?v=1zyhQjJ4i4U" placeholder="Dán link YouTube bất kỳ (Ví dụ: https://www.youtube.com/watch?v=... hoặc youtu.be/...)" />
+          <button class="btn primary" id="btnYtPlay">▶️ Phát Nhạc</button>
+          <button class="btn" id="btnYtPause">⏸️ Tạm Dừng</button>
+          <button class="btn danger" id="btnYtStop">⏹️ Tắt (Dùng Nhạc Chùa)</button>
+        </div>
+
+        <div class="row" style="background: rgba(0,0,0,0.22); padding: 10px 16px; border-radius: var(--radius-sm);">
+          <span style="font-size: 13.5px; font-weight: 600; color: var(--gold-bright); min-width: 175px;">🔊 Âm Lượng YouTube:</span>
+          <input type="range" id="sliderYtVolume" min="0" max="100" value="65" style="width: 100%; accent-color: var(--gold); cursor: pointer;" />
+          <strong id="valYtVolume" style="min-width: 50px; text-align: right; color: var(--gold-bright); font-size: 15px;">65%</strong>
+        </div>
+
+        <div>
+          <div style="font-size: 12.5px; color: var(--muted); margin-bottom: 8px; font-weight: 700; text-transform: uppercase;">
+            💡 Gợi Ý Bài Nhạc Tuyển Chọn Sẵn (Bấm 1 Click Để Phát Ngay):
+          </div>
+          <div class="yt-presets-grid">
+            <div class="yt-preset-btn" onclick="quickPlayYt('https://www.youtube.com/watch?v=1zyhQjJ4i4U', 'Nam Mô A Di Đà Phật (Kinh Niệm Êm Dịu)')">
+              <span class="yt-preset-title">🪷 Nam Mô A Di Đà Phật</span>
+              <span class="yt-preset-desc">Điệu niệm kinh êm dịu</span>
+            </div>
+            <div class="yt-preset-btn" onclick="quickPlayYt('https://www.youtube.com/watch?v=wK_sFwFvH3w', 'Thần Chú Đại Bi (Tiếng Phạn Linh Thiêng)')">
+              <span class="yt-preset-title">📿 Thần Chú Đại Bi</span>
+              <span class="yt-preset-desc">Tiếng Phạn linh thiêng</span>
+            </div>
+            <div class="yt-preset-btn" onclick="quickPlayYt('https://www.youtube.com/watch?v=2OEL4P1Rz04', 'Chuông Xoay Tây Tạng (Deep Relaxation 432Hz)')">
+              <span class="yt-preset-title">🔔 Chuông Xoay Tây Tạng</span>
+              <span class="yt-preset-desc">Sóng âm chữa lành 432Hz</span>
+            </div>
+            <div class="yt-preset-btn" onclick="quickPlayYt('https://www.youtube.com/watch?v=lTRiuFIWV54', 'Nhạc Thiền Tĩnh Tâm Không Lời')">
+              <span class="yt-preset-title">🌿 Nhạc Thiền Tịnh Tâm</span>
+              <span class="yt-preset-desc">Tiếng sáo trúc suối chảy</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HƯỚNG DẪN TÁCH ÂM THANH CHUẨN OBS & TIKTOK LIVE (CHỐNG LỌT TIẾNG YOUTUBE 100%) -->
+      <section class="card audio-guide-card">
+        <div class="card-head">
+          <div class="card-title">🎧 Tách Âm Thanh Chuẩn OBS & TikTok LIVE (Chống Lọt Tiếng YouTube 100%)</div>
+          <div class="card-badge" style="color: #c084fc; border-color: rgba(168, 85, 247, 0.4);">🛡️ Độc Lập Luồng Âm Thanh</div>
+        </div>
+
+        <div class="audio-status-pill-row">
+          <div class="audio-status-pill">
+            <span>🟢</span> Luồng Âm Thanh Chùa: <strong>Gói gọn 100% trong Browser Source</strong>
+          </div>
+          <div class="audio-status-pill shield">
+            <span>🛡️</span> Tab YouTube Riêng Của Bạn: <strong>Chỉ phát vào tai nghe của bạn, KHÔNG vào Live</strong>
+          </div>
+          <div class="audio-status-pill" style="background: rgba(245, 158, 11, 0.15); color: #fde68a; border-color: rgba(245, 158, 11, 0.35);">
+            <span>🔇</span> Trang Admin Này: <strong>Đã tự động tắt tiếng (Tránh vọng micro)</strong>
+          </div>
+        </div>
+
+        <div style="font-size: 13.5px; color: #e5e7eb; line-height: 1.6; margin-bottom: 6px;">
+          Để bạn có thể thoải mái mở 1 tab YouTube xem riêng, nghe nhạc cá nhân hoặc gọi điện thoại mà <strong>hoàn toàn không bị lọt tiếng vào livestream TikTok/OBS</strong>, toàn bộ âm thanh (chuông, mõ, nhạc Phật, giọng khấn) đã được thiết kế <strong>chỉ phát bên trong luồng link OBS</strong>. Bạn hãy làm đúng 3 bước chuẩn Studio sau:
+        </div>
+
+        <div class="guide-step-grid">
+          <div class="guide-step-box">
+            <div class="guide-step-title">
+              <span class="guide-step-num">1</span>
+              Thêm Nguồn Browser vào OBS
+            </div>
+            <div class="guide-step-desc">
+              Trong OBS, bấm <strong>+ (Add Source)</strong> &rarr; Chọn <strong>Browser (Trình duyệt)</strong> &rarr; Dán link:
+              <div style="margin-top: 6px; display: flex; gap: 6px;">
+                <input type="text" class="input-field" value="http://localhost:3000/?obs=1" readonly style="font-size: 12px; padding: 4px 8px;" id="inpObsAudioUrl" />
+                <button class="btn small primary" onclick="copyObsUrl()">Copy</button>
+              </div>
+              Đặt kích thước chuẩn: <strong>1080 x 1920</strong>.
+            </div>
+          </div>
+
+          <div class="guide-step-box highlight">
+            <div class="guide-step-title" style="color: var(--gold-bright);">
+              <span class="guide-step-num" style="background: #f59e0b; color: #000;">2</span>
+              TÍCH "Control audio via OBS" ⭐
+            </div>
+            <div class="guide-step-desc">
+              <strong>BƯỚC QUAN TRỌNG NHẤT:</strong> Trong cửa sổ thuộc tính Browser Source vừa thêm, hãy <strong>TÍCH CHỌN ô "Control audio via OBS" (Điều khiển âm thanh qua OBS)</strong>.<br>
+              <em>Tác dụng: Toàn bộ âm thanh chùa được chuyển thẳng vào luồng mixer riêng của OBS, tách rời hoàn toàn khỏi loa máy tính!</em>
+            </div>
+          </div>
+
+          <div class="guide-step-box highlight">
+            <div class="guide-step-title" style="color: #f87171;">
+              <span class="guide-step-num" style="background: #ef4444; color: #fff;">3</span>
+              TẮT TIẾNG "Desktop Audio" 🔇
+            </div>
+            <div class="guide-step-desc">
+              Trong bảng <strong>Audio Mixer (Bộ trộn âm thanh)</strong> của OBS / TikTok Studio, hãy <strong>BẤM ICON CHIẾC LOA ĐỂ TẮT TIẾNG (MUTE) "Desktop Audio"</strong>.<br>
+              <em>Từ lúc này: Mọi tab YouTube bạn xem riêng, nhạc game hay chuông Discord sẽ KHÔNG BAO GIỜ bị lọt vào live!</em>
+            </div>
+          </div>
+
+          <div class="guide-step-box">
+            <div class="guide-step-title">
+              <span class="guide-step-num">4</span>
+              Nghe Kiểm Âm Tiếng Chùa (Tùy chọn)
+            </div>
+            <div class="guide-step-desc">
+              Nếu bạn muốn <strong>vừa nghe tiếng chùa trong tai nghe vừa phát lên live</strong>:<br>
+              Trong Audio Mixer OBS, bấm bánh răng nguồn Browser &rarr; <strong>Advanced Audio Properties</strong> &rarr; Đổi Audio Monitoring sang <strong>"Monitor and Output" (Giám sát và xuất đầu ra)</strong>.
+            </div>
+          </div>
+        </div>
+
+        <!-- CÁC NÚT TEST ÂM THANH TRỰC TIẾP VÀO LIVE -->
+        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 13px; font-weight: 700; color: var(--gold-bright); margin-bottom: 8px;">
+            🧪 Bấm Nút Thử Nghiệm Âm Thanh (Kiểm tra xem âm thanh đã vào OBS chưa):
+          </div>
+          <div class="monitor-quick-actions" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+            <button class="btn small primary" onclick="sendRpc('temple.ringBell', { count: 1 })">🔔 Thử Chuông</button>
+            <button class="btn small" onclick="sendRpc('temple.strikeWoodenFish', { count: 3 })">🪵 Thử Mõ Gỗ</button>
+            <button class="btn small gold" onclick="sendRpc('temple.burnIncense', { count: 3, wish: 'Test âm thanh' })">🔥 Thử Dâng Hương</button>
+            <button class="btn small" onclick="sendRpc('temple.drawFortune', { user: 'Thí Chủ Test', topic: 'Cầu bình an' })">🎋 Thử Xin Xăm</button>
+            <button class="btn small green" onclick="sendRpc('temple.speak', { text: 'Nam mô A Di Đà Phật, thử nghiệm âm thanh chùa trực tiếp vào OBS thành công.', voice: 'maichi', broadcast: true })">🎙️ Thử Giọng Khấn AI</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- KẾT NỐI TIKTOK & ZEROTTS -->
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title">📡 Kết Nối Kênh TikTok Live & Giọng Đọc AI Mai Chi</div>
+          <div class="card-badge">ZeroTTS Mai Chi 48kHz</div>
+        </div>
+        <div class="grid-2">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="row">
+              <input type="text" id="ttUser" class="input-field" value="@zenfacts_vn" placeholder="Nhập @username TikTok đang phát Live..." />
+              <button class="btn primary" id="btnConn">Kết Nối Live</button>
+              <button class="btn danger" id="btnDisc">Ngắt</button>
+            </div>
+            <span style="font-size: 12px; color: var(--muted);">Tự động lắng nghe Thả tim (Gõ mõ), Comment (Lạy Phật/Xin xăm/Cầu an), Quà tặng (Dâng lễ).</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="row">
+              <input type="text" id="ttsDirectText" class="input-field" value="Nam mô A Di Đà Phật. Chúc quý thí chủ một buổi tối an lành, gia đạo bình an cát tường." />
+              <button class="btn primary" id="btnSpeakMaiChi">🎙️ Đọc Thử</button>
+            </div>
+            <audio id="adminAudioPreview" controls style="width: 100%; height: 36px;"></audio>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ====================================================================
+         TAB 2: ĐẠO TRÀNG & DANH SÁCH THÍ CHỦ (CHỖ NGỒI MỞ RỘNG)
+         ==================================================================== -->
+    <div class="tab-pane" id="tabDevotees">
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title">👥 Danh Sách Đạo Tràng Chánh Điện (60+ Chỗ Ngồi Mở Rộng)</div>
+          <div class="card-badge" id="seatCountBadge">Đang tải danh sách...</div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 110px;">Vị Trí Ngồi</th>
+                <th>Thí Chủ</th>
+                <th style="width: 140px;">Điểm Công Đức</th>
+                <th style="width: 110px;">Hành Động</th>
+              </tr>
+            </thead>
+            <tbody id="devoteeTableBody">
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--muted); padding: 36px;">
+                  Đang đồng bộ dữ liệu Đạo Tràng...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ====================================================================
+         TAB 3: KÍCH HOẠT NGHI THỨC TÂM LINH NHANH
+         ==================================================================== -->
+    <div class="tab-pane" id="tabRituals">
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title">🙏 Kích Hoạt Nghi Thức Tâm Linh Nhanh (Quick Rituals)</div>
+          <div class="card-badge">Thử nghiệm hoặc kích hoạt thủ công</div>
+        </div>
+        <div class="row">
+          <input type="text" id="rpcUser" class="input-field" value="Thí Chủ Minh Tâm" placeholder="Tên thí chủ..." style="max-width: 280px;" />
+          <input type="text" id="rpcWish" class="input-field" value="Cầu gia đạo bình an, vạn sự hanh thông cát tường" placeholder="Lời cầu nguyện..." />
+        </div>
+        <div class="ritual-grid">
+          <div class="ritual-btn" onclick="sendRpc('temple.burnIncense', { count: 3 })">
+            <div class="ritual-btn-icon">🔥</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Thắp 3 Nén Hương</span>
+              <span class="ritual-btn-sub">Phật tử bước lên lạy 3 lạy trước lư hương</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.sendPrayer', {})">
+            <div class="ritual-btn-icon">🏮</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Thả Đèn Hoa Đăng</span>
+              <span class="ritual-btn-sub">Hoa đăng mang tên và lời khấn bay lên</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.strikeWoodenFish', { count: 9 })">
+            <div class="ritual-btn-icon">🪵</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Gõ Mõ Tụng Kinh (9 Nhịp)</span>
+              <span class="ritual-btn-sub">Dùi gõ nhịp nhàng + Trái tim Bồ Đề bay lên</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.ringBell', { count: 1, readTts: true })">
+            <div class="ritual-btn-icon">🔔</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Thỉnh Đại Hồng Chung</span>
+              <span class="ritual-btn-sub">Chuông ngân vang + Sóng âm vàng tỏa rộng</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', {})">
+            <div class="ritual-btn-icon">🎋</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Xin Xăm / Gieo Quẻ (Tự Nhiên)</span>
+              <span class="ritual-btn-sub">Lắc ống xăm 3D + Thẻ tre bay + Sớ hoàng gia</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', { topic: 'Cầu tài lộc buôn may bán đắt tiền tài' })">
+            <div class="ritual-btn-icon">💰</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Gieo Quẻ Tài Lộc & Kinh Doanh</span>
+              <span class="ritual-btn-sub">Bốc quẻ chủ đề mưu cầu tiền tài hanh thông</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', { topic: 'Cầu tình duyên người yêu hòa hợp' })">
+            <div class="ritual-btn-icon">❤️</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Gieo Quẻ Tình Duyên & Gia Đạo</span>
+              <span class="ritual-btn-sub">Bốc quẻ tơ hồng, duyên nồng thắm thiết</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', { topic: 'Cầu thi cử học tập đỗ đạt công danh' })">
+            <div class="ritual-btn-icon">🎓</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Gieo Quẻ Công Danh & Thi Cử</span>
+              <span class="ritual-btn-sub">Bốc quẻ bảng vàng đề danh, thăng tiến</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.offerGift', { giftType: 'fruit', coins: 30, giftName: 'Mâm Ngũ Quả Cát Tường' })">
+            <div class="ritual-btn-icon">🍑</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Dâng Mâm Ngũ Quả</span>
+              <span class="ritual-btn-sub">Bày biện mâm quả cát tường cúng dường Phật</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.grandCeremony', { coins: 500, giftName: 'Đại Lễ Kim Long Chầu Phật' })">
+            <div class="ritual-btn-icon">🐉</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Đại Lễ Kim Long Chầu Phật</span>
+              <span class="ritual-btn-sub">Mưa hoa sen vàng + Hào quang vạn trượng</span>
+            </div>
+          </div>
+
+          <div class="ritual-btn" onclick="sendRpc('temple.resetMerit', {})">
+            <div class="ritual-btn-icon">♻️</div>
+            <div class="ritual-btn-texts">
+              <span class="ritual-btn-name">Đặt Lại Bảng Công Đức</span>
+              <span class="ritual-btn-sub">Khởi tạo lại dữ liệu cho buổi live stream mới</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ====================================================================
+         TAB 4: KIỂM THỬ BÌNH LUẬN & NHẬT KÝ RPC
+         ==================================================================== -->
+    <div class="tab-pane" id="tabLogs">
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-head">
+            <div class="card-title">💬 Kiểm Thử Bình Luận Khán Giả</div>
+            <div class="card-badge">Test Comment Parser</div>
+          </div>
+          <div class="row">
+            <input type="text" id="simComment" class="input-field" value="Con xin gieo một quẻ cầu tài lộc và gia đạo bình an" placeholder="Nhập bình luận của khán giả..." />
+            <button class="btn primary" id="btnSendComment">Gửi Comment</button>
+          </div>
+          <p style="font-size: 12.5px; color: var(--muted); line-height: 1.6;">
+            Hệ thống tự động phát hiện từ khóa:<br>
+            • <code>xin xăm</code>, <code>gieo quẻ</code> $\rightarrow$ Lắc ống xăm & đọc quẻ.<br>
+            • <code>thắp hương</code>, <code>bái phật</code>, <code>lạy phật</code> $\rightarrow$ Bước lên đảnh lễ 3 lạy.<br>
+            • <code>cầu...</code>, <code>nguyện...</code>, <code>bình an</code> $\rightarrow$ Thả đèn hoa đăng.<br>
+            • <code>gõ mõ</code>, <code>thỉnh chuông</code> $\rightarrow$ Gõ mõ, thỉnh Đại Hồng Chung.
+          </p>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <div class="card-title">🔌 Nhật Ký JSON-RPC 2.0</div>
+            <div class="card-badge">Console Feed</div>
+          </div>
+          <pre id="rpcOutput">{ "status": "Sẵn sàng nhận lệnh JSON-RPC 2.0" }</pre>
+        </section>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 5: MÀN HÌNH CHÁNH ĐIỆN & CÔNG CỤ PREVIEW (FULL STUDIO INSPECTOR)
+         ==================================================================== -->
+    <div id="tabLivePreview" class="tab-pane">
+      <div class="card" style="border-color: rgba(245, 158, 11, 0.45);">
+        <div class="card-head">
+          <div class="card-title">📺 Màn Hình Chánh Điện Trực Tiếp (Full Studio Resolution)</div>
+          <div class="card-badge" style="color: #10b981;">● Chuẩn 9:16 (1080 x 1920)</div>
+        </div>
+        <div class="preview-hero-layout">
+          <div class="preview-hero-left">
+            <div class="monitor-screen-wrapper" style="max-width: 420px; margin: 0 auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 30px rgba(245, 158, 11, 0.25);">
+              <iframe id="heroLiveIframe" src="/?obs=1&preview=1&v=2.3" class="monitor-iframe" style="width: 100%; height: 100%;" title="Full Live Preview"></iframe>
+            </div>
+          </div>
+          <div class="preview-hero-right">
+            <div class="card" style="background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.06);">
+              <div class="card-title" style="font-size: 16px;">🎛️ Thao Tác Trực Tiếp Lên Màn Hình Live</div>
+              <p style="font-size: 13px; color: var(--muted); margin: 6px 0 14px 0;">
+                Bấm các nút bên dưới để kích hoạt nghi thức tâm linh ngay lập tức và xem hiệu ứng xuất hiện trên Chánh Điện trong thời gian thực.
+              </p>
+              <div class="grid-2">
+                <button class="btn gold" onclick="sendRpc('temple.burnIncense', { count: 3, wish: 'Cầu quốc thái dân an, gia đạo hưng thịnh' })">🔥 Thắp 3 Nén Hương</button>
+                <button class="btn primary" onclick="sendRpc('temple.ringBell', { count: 1, wish: 'Thỉnh chuông cầu an', readTts: true })">🔔 Thỉnh Đại Hồng Chung</button>
+                <button class="btn" onclick="sendRpc('temple.strikeWoodenFish', { count: 5 })">🪵 Gõ Mõ (+5 CĐ)</button>
+                <button class="btn green" onclick="sendRpc('temple.sendPrayer', { user: 'Thí Chủ', wish: 'Cầu tài lộc bình an như ý' })">🏮 Thả Đèn Hoa Đăng</button>
+                <button class="btn gold" onclick="sendRpc('temple.drawFortune', { user: 'Thí Chủ', topic: 'Cầu công danh sự nghiệp' })">🎋 Gieo Quẻ Xin Xăm</button>
+                <button class="btn primary" onclick="sendRpc('temple.welcomeDevotee', { user: 'Thí Chủ Mới', message: 'Hoan hỷ chào đón Thí Chủ đã đến Chánh Điện lễ Phật' })">🪷 Chào Mừng Thí Chủ</button>
+              </div>
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 13px; font-weight: 700; color: var(--gold-bright); margin-bottom: 8px;">🪷 Đổi Bối Cảnh Chánh Điện Realtime:</div>
+                <div class="grid-2">
+                  <button class="btn" onclick="selectScene('amitabha')">🪷 Đức Phật A Di Đà</button>
+                  <button class="btn" onclick="selectScene('shakyamuni')">🌿 Cội Bồ Đề Thích Ca</button>
+                  <button class="btn" onclick="selectScene('avalokiteshvara')">🌊 Phổ Đà Quán Âm</button>
+                  <button class="btn" onclick="selectScene('lantern')">🏮 Đêm Đại Lễ Hoa Đăng</button>
+                </div>
+              </div>
+
+              <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 13px; font-weight: 700; color: var(--gold-bright); margin-bottom: 8px;">🔗 Liên Kết Phát Sóng & Setup OBS / TikTok LIVE Studio:</div>
+                <div class="row">
+                  <input type="text" class="input-field" value="http://localhost:3000/?obs=1" readonly id="inpObsUrlFull" />
+                  <button class="btn primary" onclick="copyObsUrl()">📋 Copy Link OBS</button>
+                  <a class="btn" href="/" target="_blank">🪷 Mở Tab Riêng</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- end dashboard-tabs-column -->
+
+  <!-- CỘT XEM TRƯỚC CHÁNH ĐIỆN 9:16 TRỰC TIẾP (LIVE MONITOR PANEL) -->
+  <aside class="live-monitor-panel" id="liveMonitorPanel">
+    <div class="monitor-card">
+      <div class="monitor-header">
+        <div class="monitor-title">
+          <span class="pulse-live-dot"></span>
+          <span>LIVE MONITOR (9:16)</span>
+        </div>
+        <div class="monitor-header-tools">
+          <button class="icon-tool-btn" id="btnMonAudio" onclick="toggleMonitorAudio()" title="Bật/Tắt Âm thanh Preview">🔇</button>
+          <button class="icon-tool-btn active" id="btnMonSafe" onclick="toggleMonitorSafe()" title="Bật/Tắt Safe Zone TikTok">🛡️</button>
+          <button class="icon-tool-btn" id="btnMonGuide" onclick="toggleMonitorGuide()" title="Bật/Tắt Lưới Căn TikTok">📐</button>
+          <button class="icon-tool-btn" onclick="reloadMonitor()" title="Làm mới màn hình">🔄</button>
+          <a class="icon-tool-btn" href="/" target="_blank" title="Mở Chánh Điện ở tab mới">↗</a>
+        </div>
+      </div>
+
+      <div class="monitor-screen-wrapper">
+        <iframe id="monitorIframe" src="/?obs=1&preview=1&v=2.3" class="monitor-iframe" title="Xem trước Chánh Điện"></iframe>
+      </div>
+
+      <div class="monitor-footer-controls">
+        <div class="monitor-quick-actions">
+          <button class="btn small gold" onclick="sendRpc('temple.burnIncense', { count: 3, wish: 'Cầu bình an tài lộc' })">🔥 Dâng Hương</button>
+          <button class="btn small" onclick="sendRpc('temple.ringBell', { count: 1 })">🔔 Chuông</button>
+          <button class="btn small" onclick="sendRpc('temple.strikeWoodenFish', { count: 1 })">🪵 Mõ</button>
+          <button class="btn small primary" onclick="sendRpc('temple.welcomeDevotee', { user: 'Thí Chủ' })">🪷 Chào</button>
+        </div>
+        <div class="monitor-status-line">
+          <span>Chuẩn phát sóng: <strong>1080 x 1920</strong></span>
+          <span class="monitor-badge-safe" id="monBadgeSafe">Safe Zone: BẬT</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div> <!-- end dashboard-main-split -->
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="adminToast">Đã thực hiện thành công</div>
+
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach((el) => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach((el) => el.classList.remove('active'));
+
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.classList.add('active');
+
+      const tabs = {
+        tabControls: 0,
+        tabDevotees: 1,
+        tabRituals: 2,
+        tabLogs: 3,
+        tabLivePreview: 4
+      };
+      const btns = document.querySelectorAll('.nav-tab-btn');
+      if (btns[tabs[tabId]]) btns[tabs[tabId]].classList.add('active');
+
+      const sideMon = document.getElementById('liveMonitorPanel');
+      if (sideMon) {
+        sideMon.style.display = tabId === 'tabLivePreview' ? 'none' : '';
+      }
+
+      if (tabId === 'tabLivePreview') {
+        const heroIframe = document.getElementById('heroLiveIframe');
+        if (heroIframe) {
+          if (!heroIframe.src || heroIframe.src === '' || heroIframe.src.endsWith('about:blank')) {
+            heroIframe.src = '/?obs=1';
+          } else if (heroIframe.contentWindow) {
+            try { heroIframe.contentWindow.dispatchEvent(new Event('resize')); } catch (_) {}
+          }
+        }
+      }
+    }
+
+    function toggleLiveMonitor() {
+      const split = document.getElementById('dashboardMainSplit');
+      if (!split) return;
+      const isHidden = split.classList.toggle('monitor-hidden');
+      const lbl = document.getElementById('lblLiveMonitor');
+      if (lbl) {
+        lbl.textContent = isHidden ? 'Mở Màn Hình Xem Trước' : 'Thu Gọn Màn Hình Xem Trước';
+      }
+      const btn = document.getElementById('btnToggleLiveMonitor');
+      if (btn) btn.classList.toggle('gold', !isHidden);
+      showToast(isHidden ? 'Đã thu gọn màn hình xem trước' : 'Đã mở màn hình xem trước Chánh Điện');
+    }
+
+    function copyObsUrl() {
+      const url = `${window.location.origin}/?obs=1`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('✅ Đã copy link OBS Browser Source: ' + url);
+        }).catch(() => {
+          prompt('Copy link OBS 9:16 này để dán vào Browser Source trong OBS:', url);
+        });
+      } else {
+        prompt('Copy link OBS 9:16 này để dán vào Browser Source trong OBS:', url);
+      }
+    }
+
+    function toggleMonitorAudio() {
+      const btn = document.getElementById('btnMonAudio');
+      const iframe = document.getElementById('monitorIframe');
+      const heroIframe = document.getElementById('heroLiveIframe');
+      const isMuted = btn.textContent.includes('🔇');
+      btn.textContent = isMuted ? '🔊' : '🔇';
+      btn.classList.toggle('active', isMuted);
+      const postMsg = { type: 'setAudioMute', muted: !isMuted };
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(postMsg, '*');
+      }
+      if (heroIframe && heroIframe.contentWindow) {
+        heroIframe.contentWindow.postMessage(postMsg, '*');
+      }
+      showToast(isMuted ? '🔊 Đã bật âm thanh kiểm âm' : '🔇 Đã tắt tiếng kiểm âm (An toàn không lọt tiếng)');
+    }
+
+    function toggleMonitorSafe() {
+      const chkSafe = document.getElementById('checkTiktokSafeMode');
+      if (chkSafe) {
+        chkSafe.checked = !chkSafe.checked;
+        sendRpc('temple.updateSettings', { tiktokSafeMode: chkSafe.checked });
+        const badge = document.getElementById('monBadgeSafe');
+        const btn = document.getElementById('btnMonSafe');
+        if (badge) {
+          badge.textContent = chkSafe.checked ? 'Safe Zone: BẬT' : 'Safe Zone: TẮT';
+          badge.style.color = chkSafe.checked ? 'var(--green)' : 'var(--muted)';
+        }
+        if (btn) btn.classList.toggle('active', chkSafe.checked);
+      }
+    }
+
+    function toggleMonitorGuide() {
+      const chkGuide = document.getElementById('checkSafeZoneGuide');
+      if (chkGuide) {
+        chkGuide.checked = !chkGuide.checked;
+        sendRpc('temple.updateSettings', { showSafeGuide: chkGuide.checked });
+        const btn = document.getElementById('btnMonGuide');
+        if (btn) btn.classList.toggle('active', chkGuide.checked);
+      }
+    }
+
+    function reloadMonitor() {
+      const iframe = document.getElementById('monitorIframe');
+      if (iframe) {
+        iframe.src = `/?obs=1&preview=1&t=${Date.now()}`;
+        showToast('🔄 Đã làm mới màn hình xem trước');
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('adminToast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    async function sendRpc(method, extraParams = {}) {
+      const user = document.getElementById('rpcUser')?.value.trim() || 'Thí Chủ';
+      const wish = document.getElementById('rpcWish')?.value.trim();
+      const body = {
+        jsonrpc: '2.0',
+        id: Date.now(),
+        method,
+        params: { user, wish, ...extraParams }
+      };
+      try {
+        const res = await fetch('/rpc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        const out = document.getElementById('rpcOutput');
+        if (out) out.textContent = JSON.stringify(data, null, 2);
+        refreshStatus();
+        showToast(`✅ Đã gửi lệnh: ${method}`);
+        return data;
+      } catch (err) {
+        showToast(`❌ Lỗi: ${err.message}`);
+      }
+    }
+
+    // Xử lý nhạc YouTube
+    function quickPlayYt(url, title) {
+      document.getElementById('ytUrlInput').value = url;
+      sendRpc('youtube.setTrack', { url, title, play: true });
+      showToast(`🎵 Đang phát: ${title}`);
+    }
+
+    document.getElementById('btnYtPlay').onclick = () => {
+      const url = document.getElementById('ytUrlInput').value.trim();
+      sendRpc('youtube.setTrack', { url, play: true });
+    };
+
+    document.getElementById('btnYtPause').onclick = () => {
+      sendRpc('youtube.control', { action: 'pause' });
+    };
+
+    document.getElementById('btnYtStop').onclick = () => {
+      sendRpc('youtube.control', { action: 'stop' });
+    };
+
+    document.getElementById('sliderYtVolume').oninput = (e) => {
+      const val = e.target.value;
+      document.getElementById('valYtVolume').textContent = `${val}%`;
+      sendRpc('youtube.control', { volume: Number(val) });
+    };
+
+    // Chào mừng thí chủ
+    document.getElementById('btnSendWelcome').onclick = () => {
+      const user = document.getElementById('welcomeDevoteeInput').value.trim() || 'Thí Chủ Thiện Tâm';
+      sendRpc('temple.welcomeDevotee', { user, message: `Hoan hỷ chào đón Thí Chủ ${user} đã vào Chánh Điện lễ Phật` });
+    };
+
+    document.getElementById('btnWelcomeAll').onclick = () => {
+      sendRpc('temple.welcomeDevotee', {
+        user: 'Đại Chúng Thập Phương',
+        message: 'Hoan hỷ chào đón Quý Thí Chủ Thập Phương cùng tề tựu nơi Chánh Điện Đức Phật A Di Đà'
+      });
+    };
+
+    // Toggle switches
+    document.getElementById('checkAutoWelcome').onchange = (e) => {
+      sendRpc('temple.updateSettings', { welcomeEnabled: e.target.checked });
+    };
+    document.getElementById('checkAutoSim').onchange = (e) => {
+      sendRpc('live.setAutoSim', { enabled: e.target.checked });
+    };
+    document.getElementById('checkTiktokSafeMode').onchange = (e) => {
+      sendRpc('temple.updateSettings', { tiktokSafeMode: e.target.checked });
+    };
+    document.getElementById('checkSafeZoneGuide').onchange = (e) => {
+      sendRpc('temple.updateSettings', { showSafeGuide: e.target.checked });
+    };
+
+    // TikTok Live Connection
+    document.getElementById('btnConn').onclick = () => {
+      const username = document.getElementById('ttUser').value.trim();
+      sendRpc('live.connect', { username });
+    };
+    document.getElementById('btnDisc').onclick = () => sendRpc('live.disconnect', {});
+
+    // Comment test
+    document.getElementById('btnSendComment').onclick = () => {
+      const comment = document.getElementById('simComment').value.trim();
+      sendRpc('temple.comment', { comment });
+    };
+
+    // ZeroTTS test
+    document.getElementById('btnSpeakMaiChi').onclick = async () => {
+      const text = document.getElementById('ttsDirectText').value.trim();
+      const data = await sendRpc('temple.speak', { text, voice: 'maichi', broadcast: true });
+      if (data?.result?.url) {
+        const player = document.getElementById('adminAudioPreview');
+        player.src = data.result.url;
+        player.play().catch(() => {});
+      }
+    };
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+    }
+
+    function renderDevoteesTable(leaderboard = []) {
+      const tbody = document.getElementById('devoteeTableBody');
+      const badge = document.getElementById('seatCountBadge');
+      const tabBadge = document.getElementById('tabSeatBadge');
+      if (!tbody) return;
+
+      if (!leaderboard || leaderboard.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--muted); padding: 36px;">Chưa có Thí Chủ nào tham gia Đạo Tràng</td></tr>`;
+        if (badge) badge.textContent = '0 Thí Chủ';
+        if (tabBadge) tabBadge.textContent = '0';
+        return;
+      }
+
+      if (badge) badge.textContent = `${leaderboard.length} Thí Chủ Đang Lễ Phật`;
+      if (tabBadge) tabBadge.textContent = String(leaderboard.length);
+
+      tbody.innerHTML = leaderboard.map((d, index) => {
+        const avatarHtml = d.avatar
+          ? `<img src="${escapeHtml(d.avatar)}" alt="" />`
+          : escapeHtml(String(d.name || 'P').charAt(0).toUpperCase());
+
+        const isVip = index < 6;
+        const rankTag = isVip
+          ? `<span class="rank-badge vip">👑 VIP ${index + 1}</span>`
+          : `<span class="rank-badge" style="color: var(--muted);">Ghế #${index + 1}</span>`;
+
+        return `
+          <tr>
+            <td>${rankTag}</td>
+            <td>
+              <span class="devotee-avatar">${avatarHtml}</span>
+              <strong style="color: #fff; font-size: 14px;">${escapeHtml(d.name)}</strong>
+              ${d.lastWish ? `<div style="font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px;">“${escapeHtml(d.lastWish)}”</div>` : ''}
+            </td>
+            <td style="font-weight: 700; color: var(--gold-bright); font-size: 14px;">
+              ${Number(d.merit || 0).toLocaleString('vi-VN')} CĐ
+            </td>
+            <td>
+              <button class="btn small primary" onclick="sendRpc('temple.welcomeDevotee', { user: '${escapeHtml(d.name)}' })">Chào</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    const SCENE_NAMES = {
+      amitabha: 'Đức Phật A Di Đà',
+      shakyamuni: 'Đức Bổn Sư Thích Ca Mâu Ni',
+      avalokiteshvara: 'Đức Quán Thế Âm Bồ Tát',
+      lantern: 'Đêm Đại Lễ Hoa Đăng Cầu An'
+    };
+
+    function updateSceneCardsUI(sceneName) {
+      if (!sceneName) sceneName = 'amitabha';
+      document.querySelectorAll('.scene-card').forEach((card) => {
+        card.classList.toggle('active', card.getAttribute('data-scene') === sceneName);
+      });
+      const badge = document.getElementById('currentSceneBadge');
+      if (badge) {
+        badge.textContent = `Bối cảnh: ${SCENE_NAMES[sceneName] || sceneName}`;
+      }
+    }
+
+    async function selectScene(sceneName) {
+      updateSceneCardsUI(sceneName);
+      const ifr = document.getElementById('monitorIframe');
+      const heroIfr = document.getElementById('heroLiveIframe');
+      const msg = { type: 'switchScene', scene: sceneName };
+      if (ifr && ifr.contentWindow) {
+        try { ifr.contentWindow.postMessage(msg, '*'); } catch (_) {}
+      }
+      if (heroIfr && heroIfr.contentWindow) {
+        try { heroIfr.contentWindow.postMessage(msg, '*'); } catch (_) {}
+      }
+      await sendRpc('temple.switchScene', { scene: sceneName });
+      showToast(`🪷 Đã chuyển sang bối cảnh: ${SCENE_NAMES[sceneName] || sceneName}`);
+    }
+
+    function testMonkStrike() {
+      sendRpc('temple.strikeWoodenFish', { user: 'Admin Test', count: 1 });
+      showToast('🪵 Chú Tiểu 3D đã gõ mõ (+1 Công Đức)');
+    }
+
+    function testDevoteeProstrate() {
+      sendRpc('temple.burnIncense', {
+        user: 'Thí Chủ Admin',
+        count: 3,
+        wish: 'Thành kính đảnh lễ Tam Bảo, cầu an lành cát tường'
+      });
+      showToast('🙏 Thí Chủ 3D tiến lên dâng hương đảnh lễ Tam Bái');
+    }
+
+    async function refreshStatus() {
+      try {
+        const res = await fetch('/api/state');
+        const st = await res.json();
+
+        document.getElementById('statTotalIncense').textContent = Number(st.totalIncense || 0).toLocaleString('vi-VN');
+        document.getElementById('statTotalMerit').textContent = Number(st.totalMerit || 0).toLocaleString('vi-VN');
+        document.getElementById('statDevoteeCount').textContent = (st.leaderboard || []).length;
+
+        const liveEl = document.getElementById('statLiveStatus');
+        if (st.tiktok?.connected) {
+          liveEl.textContent = `🟢 LIVE (${st.tiktok.viewerCount || 0} mắt)`;
+          liveEl.style.color = '#10b981';
+        } else if (st.tiktok?.connecting) {
+          liveEl.textContent = '🟡 Đang kết nối...';
+          liveEl.style.color = '#f59e0b';
+        } else {
+          liveEl.textContent = '🔴 Offline';
+          liveEl.style.color = '#ef4444';
+        }
+
+        document.getElementById('statusBanner').textContent =
+          `Kênh: @${st.tiktok?.username || 'Chưa kết nối'} | ZeroTTS: ${st.tts?.status || 'Sẵn sàng'} (Giọng: ${st.tts?.voice || 'Mai Chi'})`;
+
+        if (st.settings) {
+          const chkW = document.getElementById('checkAutoWelcome');
+          if (chkW) chkW.checked = st.settings.welcomeEnabled !== false;
+          const chkS = document.getElementById('checkAutoSim');
+          if (chkS) chkS.checked = Boolean(st.settings.autoSim);
+          const chkSafe = document.getElementById('checkTiktokSafeMode');
+          if (chkSafe) chkSafe.checked = st.settings.tiktokSafeMode !== false;
+          const chkGuide = document.getElementById('checkSafeZoneGuide');
+          if (chkGuide) chkGuide.checked = Boolean(st.settings.showSafeGuide);
+        }
+
+        // Cập nhật trạng thái YouTube
+        if (st.settings?.youtube) {
+          const yt = st.settings.youtube;
+          const badge = document.getElementById('ytStatusBadge');
+          if (badge) {
+            if (yt.enabled && yt.playing) {
+              badge.textContent = `▶️ Đang phát: ${yt.title || 'YouTube Music'} (${yt.volume}%)`;
+              badge.style.color = '#10b981';
+            } else if (yt.enabled && !yt.playing) {
+              badge.textContent = `⏸️ Tạm dừng: ${yt.title || 'YouTube Music'}`;
+              badge.style.color = '#f59e0b';
+            } else {
+              badge.textContent = `⏹️ Đang dùng: Nhạc Chùa / Chuông Xoay Tây Tạng Mặc Định`;
+              badge.style.color = 'var(--muted)';
+            }
+          }
+        }
+
+        if (st.currentScene) {
+          updateSceneCardsUI(st.currentScene);
+        }
+
+        renderDevoteesTable(st.leaderboard || []);
+      } catch (_) {}
+    }
+
+    refreshStatus();
+    setInterval(refreshStatus, 3200);
+  </script>
+</body>
+</html>
