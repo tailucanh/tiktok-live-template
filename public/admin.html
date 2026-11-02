@@ -408,52 +408,211 @@
       color: var(--muted);
     }
 
-    /* RITUAL BUTTONS GRID */
+    /* RITUAL BUTTONS GRID & ADVANCED INTERACTIVE ANIMATIONS */
     .ritual-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
     .ritual-btn {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(245, 158, 11, 0.18);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(245, 158, 11, 0.02) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.22);
       border-radius: var(--radius-sm);
-      padding: 12px 16px;
+      padding: 13px 16px;
       text-align: left;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 12px;
-      transition: all 0.15s ease;
+      gap: 14px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
     .ritual-btn:hover {
-      background: rgba(245, 158, 11, 0.12);
-      border-color: var(--gold);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.10) 100%);
+      border-color: #f59e0b;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(245, 158, 11, 0.25);
     }
+    .ritual-btn:active {
+      transform: scale(0.96) translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    .ritual-btn.is-active {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(180, 83, 9, 0.35) 100%) !important;
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.65), inset 0 0 16px rgba(245, 158, 11, 0.3) !important;
+      animation: ritualBorderPulse 1.2s infinite alternate ease-in-out;
+    }
+    .ritual-btn.is-success {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.25) 100%) !important;
+      border-color: #34d399 !important;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important;
+    }
+    @keyframes ritualBorderPulse {
+      0% { border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 14px rgba(245, 158, 11, 0.4); }
+      100% { border-color: #fbbf24; box-shadow: 0 0 28px rgba(251, 191, 36, 0.8), inset 0 0 16px rgba(245, 158, 11, 0.35); }
+    }
+
+    /* RIPPLE SHOCKWAVE EFFECT */
+    .ritual-ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ritualRippleAnim 0.65s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+      background: radial-gradient(circle, rgba(253, 224, 71, 0.7) 0%, rgba(245, 158, 11, 0.25) 45%, rgba(245, 158, 11, 0) 70%);
+      pointer-events: none;
+      z-index: 5;
+    }
+    @keyframes ritualRippleAnim {
+      to {
+        transform: scale(4.5);
+        opacity: 0;
+      }
+    }
+
     .ritual-btn-icon {
-      font-size: 24px;
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: rgba(245, 158, 11, 0.1);
+      font-size: 26px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    .ritual-btn:hover .ritual-btn-icon {
+      transform: scale(1.12);
+      background: rgba(245, 158, 11, 0.22);
+      border-color: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+    }
+    .ritual-btn.is-active .ritual-btn-icon {
+      transform: scale(1.22);
+      animation: iconHeartBeat 0.8s infinite ease-in-out;
+    }
+
+    /* SPECIFIC ICON TRIGGER ANIMATIONS */
+    .ritual-btn[data-action='burnIncense'].is-active .ritual-btn-icon {
+      animation: iconFlameErupt 0.8s infinite alternate ease-in-out;
+    }
+    .ritual-btn[data-action='sendPrayer'].is-active .ritual-btn-icon {
+      animation: iconLanternFloat 1.2s infinite alternate ease-in-out;
+    }
+    .ritual-btn[data-action='strikeWoodenFish'].is-active .ritual-btn-icon {
+      animation: iconWoodfishStrike 0.35s infinite alternate ease-in-out;
+    }
+    .ritual-btn[data-action='ringBell'].is-active .ritual-btn-icon {
+      animation: iconBellSwing 0.7s infinite alternate ease-in-out;
+      transform-origin: top center;
+    }
+    .ritual-btn[data-action='drawFortune'].is-active .ritual-btn-icon {
+      animation: iconFortuneShake 0.3s infinite alternate ease-in-out;
+    }
+    .ritual-btn[data-action='grandCeremony'].is-active .ritual-btn-icon {
+      animation: iconDragonAura 1.0s infinite alternate ease-in-out;
+    }
+    .ritual-btn[data-action='resetMerit'].is-active .ritual-btn-icon {
+      animation: iconSpinReset 0.8s infinite linear;
+    }
+
+    @keyframes iconFlameErupt {
+      0% { transform: scale(1.1) translateY(0); filter: drop-shadow(0 0 4px #f59e0b); }
+      100% { transform: scale(1.35) translateY(-3px); filter: drop-shadow(0 0 14px #ef4444); }
+    }
+    @keyframes iconLanternFloat {
+      0% { transform: scale(1.1) translateY(2px) rotate(-3deg); }
+      100% { transform: scale(1.25) translateY(-5px) rotate(3deg); filter: drop-shadow(0 0 12px #f97316); }
+    }
+    @keyframes iconWoodfishStrike {
+      0% { transform: scale(1.05) rotate(-14deg); }
+      100% { transform: scale(1.28) rotate(14deg); filter: drop-shadow(0 0 10px #fbbf24); }
+    }
+    @keyframes iconBellSwing {
+      0% { transform: scale(1.15) rotate(-22deg); }
+      100% { transform: scale(1.15) rotate(22deg); filter: drop-shadow(0 0 14px #fbbf24); }
+    }
+    @keyframes iconFortuneShake {
+      0% { transform: scale(1.15) rotate(-12deg) translateY(-2px); }
+      100% { transform: scale(1.15) rotate(12deg) translateY(2px); filter: drop-shadow(0 0 10px #eab308); }
+    }
+    @keyframes iconDragonAura {
+      0% { transform: scale(1.1) rotate(0deg); filter: drop-shadow(0 0 6px #f59e0b); }
+      100% { transform: scale(1.35) rotate(6deg); filter: drop-shadow(0 0 18px #fbbf24); }
+    }
+    @keyframes iconSpinReset {
+      0% { transform: rotate(0deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1.2); }
+    }
+    @keyframes iconHeartBeat {
+      0% { transform: scale(1.1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1.1); }
+    }
+
     .ritual-btn-texts {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
+      min-width: 0;
     }
     .ritual-btn-name {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 700;
-      color: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .ritual-btn-sub {
       font-size: 11.5px;
       color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* STATUS PILL BADGE */
+    .ritual-badge-pill {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+    .ritual-btn:hover .ritual-badge-pill {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+    .ritual-btn.is-active .ritual-badge-pill {
+      background: rgba(245, 158, 11, 0.3);
+      color: #fffbeb;
+      border-color: #fbbf24;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+      animation: badgePulseAdmin 0.8s infinite alternate;
+    }
+    .ritual-btn.is-success .ritual-badge-pill {
+      background: rgba(16, 185, 129, 0.3);
+      color: #a7f3d0;
+      border-color: #34d399;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+    @keyframes badgePulseAdmin {
+      0% { opacity: 0.75; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1.04); }
     }
 
     /* DEVOTEES TABLE */
@@ -1038,6 +1197,37 @@
         </div>
       </section>
 
+      <!-- 🎥 ĐẠO DIỄN CAMERA & THỜI KHẮC ÁNH SÁNG 3D -->
+      <section class="card" style="border-color: rgba(245, 158, 11, 0.55); background: linear-gradient(180deg, rgba(26, 18, 10, 0.88) 0%, rgba(16, 10, 5, 0.95) 100%);">
+        <div class="card-head">
+          <div class="card-title">🎥 Đạo Diễn Camera & Thời Khắc Ánh Sáng 3D Realtime</div>
+          <div class="card-badge">Đổi góc quay & thời gian 0ms</div>
+        </div>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">
+          Điều khiển góc máy điện thờ 3D và thay đổi thời khắc ánh sáng trên toàn bộ màn hình phát trực tiếp:
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="background: rgba(0,0,0,0.25); padding: 12px; border-radius: 10px; border: 1px solid rgba(245,158,11,0.2);">
+            <div style="font-size: 13px; font-weight: 700; color: var(--gold-bright); margin-bottom: 8px;">🎥 Góc Quay Camera 3D:</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn gold" onclick="switch3DCamera('wide')">🎥 Toàn Cảnh Chùa</button>
+              <button class="btn" onclick="switch3DCamera('altar')">🎥 Cận Dâng Hương</button>
+              <button class="btn" onclick="switch3DCamera('monk')">🎥 Chú Tiểu Gõ Mõ</button>
+              <button class="btn" onclick="switch3DCamera('overhead')">🎥 Góc Đài Phật</button>
+            </div>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 12px; border-radius: 10px; border: 1px solid rgba(245,158,11,0.2);">
+            <div style="font-size: 13px; font-weight: 700; color: var(--gold-bright); margin-bottom: 8px;">🌅 Thời Khắc & Ánh Sáng:</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn gold" onclick="switch3DAmbience('day')">☀️ Thanh Tịnh</button>
+              <button class="btn" onclick="switch3DAmbience('sunset')">🌅 Hoàng Hôn</button>
+              <button class="btn" onclick="switch3DAmbience('night')">🏮 Đêm Hoa Đăng</button>
+              <button class="btn" onclick="switch3DAmbience('golden')">🪷 Kim Sắc</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- QUẢN LÝ CHÀO MỪNG -->
       <section class="card" style="border-color: rgba(245, 158, 11, 0.45);">
         <div class="card-head">
@@ -1297,92 +1487,103 @@
           <input type="text" id="rpcWish" class="input-field" value="Cầu gia đạo bình an, vạn sự hanh thông cát tường" placeholder="Lời cầu nguyện..." />
         </div>
         <div class="ritual-grid">
-          <div class="ritual-btn" onclick="sendRpc('temple.burnIncense', { count: 3 })">
+          <div class="ritual-btn" data-action="burnIncense" onclick="triggerRitual(this, 'temple.burnIncense', { count: 3 }, event)">
             <div class="ritual-btn-icon">🔥</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Thắp 3 Nén Hương</span>
               <span class="ritual-btn-sub">Phật tử bước lên lạy 3 lạy trước lư hương</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.sendPrayer', {})">
+          <div class="ritual-btn" data-action="sendPrayer" onclick="triggerRitual(this, 'temple.sendPrayer', {}, event)">
             <div class="ritual-btn-icon">🏮</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Thả Đèn Hoa Đăng</span>
               <span class="ritual-btn-sub">Hoa đăng mang tên và lời khấn bay lên</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.strikeWoodenFish', { count: 9 })">
+          <div class="ritual-btn" data-action="strikeWoodenFish" onclick="triggerRitual(this, 'temple.strikeWoodenFish', { count: 9 }, event)">
             <div class="ritual-btn-icon">🪵</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Gõ Mõ Tụng Kinh (9 Nhịp)</span>
               <span class="ritual-btn-sub">Dùi gõ nhịp nhàng + Trái tim Bồ Đề bay lên</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.ringBell', { count: 1, readTts: true })">
+          <div class="ritual-btn" data-action="ringBell" onclick="triggerRitual(this, 'temple.ringBell', { count: 1, readTts: true }, event)">
             <div class="ritual-btn-icon">🔔</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Thỉnh Đại Hồng Chung</span>
               <span class="ritual-btn-sub">Chuông ngân vang + Sóng âm vàng tỏa rộng</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', {})">
+          <div class="ritual-btn" data-action="drawFortune" onclick="triggerRitual(this, 'temple.drawFortune', {}, event)">
             <div class="ritual-btn-icon">🎋</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Xin Xăm / Gieo Quẻ (Tự Nhiên)</span>
               <span class="ritual-btn-sub">Lắc ống xăm 3D + Thẻ tre bay + Sớ hoàng gia</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', { topic: 'Cầu tài lộc buôn may bán đắt tiền tài' })">
+          <div class="ritual-btn" data-action="drawFortune" onclick="triggerRitual(this, 'temple.drawFortune', { topic: 'Cầu tài lộc buôn may bán đắt tiền tài' }, event)">
             <div class="ritual-btn-icon">💰</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Gieo Quẻ Tài Lộc & Kinh Doanh</span>
               <span class="ritual-btn-sub">Bốc quẻ chủ đề mưu cầu tiền tài hanh thông</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', { topic: 'Cầu tình duyên người yêu hòa hợp' })">
+          <div class="ritual-btn" data-action="drawFortune" onclick="triggerRitual(this, 'temple.drawFortune', { topic: 'Cầu tình duyên người yêu hòa hợp' }, event)">
             <div class="ritual-btn-icon">❤️</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Gieo Quẻ Tình Duyên & Gia Đạo</span>
               <span class="ritual-btn-sub">Bốc quẻ tơ hồng, duyên nồng thắm thiết</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.drawFortune', { topic: 'Cầu thi cử học tập đỗ đạt công danh' })">
+          <div class="ritual-btn" data-action="drawFortune" onclick="triggerRitual(this, 'temple.drawFortune', { topic: 'Cầu thi cử học tập đỗ đạt công danh' }, event)">
             <div class="ritual-btn-icon">🎓</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Gieo Quẻ Công Danh & Thi Cử</span>
               <span class="ritual-btn-sub">Bốc quẻ bảng vàng đề danh, thăng tiến</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.offerGift', { giftType: 'fruit', coins: 30, giftName: 'Mâm Ngũ Quả Cát Tường' })">
+          <div class="ritual-btn" data-action="offerGift" onclick="triggerRitual(this, 'temple.offerGift', { giftType: 'fruit', coins: 30, giftName: 'Mâm Ngũ Quả Cát Tường' }, event)">
             <div class="ritual-btn-icon">🍑</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Dâng Mâm Ngũ Quả</span>
               <span class="ritual-btn-sub">Bày biện mâm quả cát tường cúng dường Phật</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.grandCeremony', { coins: 500, giftName: 'Đại Lễ Kim Long Chầu Phật' })">
+          <div class="ritual-btn" data-action="grandCeremony" onclick="triggerRitual(this, 'temple.grandCeremony', { coins: 500, giftName: 'Đại Lễ Kim Long Chầu Phật' }, event)">
             <div class="ritual-btn-icon">🐉</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Đại Lễ Kim Long Chầu Phật</span>
               <span class="ritual-btn-sub">Mưa hoa sen vàng + Hào quang vạn trượng</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
 
-          <div class="ritual-btn" onclick="sendRpc('temple.resetMerit', {})">
+          <div class="ritual-btn" data-action="resetMerit" onclick="triggerRitual(this, 'temple.resetMerit', {}, event)">
             <div class="ritual-btn-icon">♻️</div>
             <div class="ritual-btn-texts">
               <span class="ritual-btn-name">Đặt Lại Bảng Công Đức</span>
               <span class="ritual-btn-sub">Khởi tạo lại dữ liệu cho buổi live stream mới</span>
             </div>
+            <span class="ritual-badge-pill">Sẵn sàng</span>
           </div>
         </div>
       </section>
@@ -1433,7 +1634,7 @@
         <div class="preview-hero-layout">
           <div class="preview-hero-left">
             <div class="monitor-screen-wrapper" style="max-width: 420px; margin: 0 auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 30px rgba(245, 158, 11, 0.25);">
-              <iframe id="heroLiveIframe" src="/?obs=1&preview=1&v=2.3" class="monitor-iframe" style="width: 100%; height: 100%;" title="Full Live Preview"></iframe>
+              <iframe id="heroLiveIframe" src="/?obs=1&preview=1&v=4.1" class="monitor-iframe" style="width: 100%; height: 100%;" title="Full Live Preview"></iframe>
             </div>
           </div>
           <div class="preview-hero-right">
@@ -1493,7 +1694,7 @@
       </div>
 
       <div class="monitor-screen-wrapper">
-        <iframe id="monitorIframe" src="/?obs=1&preview=1&v=2.3" class="monitor-iframe" title="Xem trước Chánh Điện"></iframe>
+        <iframe id="monitorIframe" src="/?obs=1&preview=1&v=4.1" class="monitor-iframe" title="Xem trước Chánh Điện"></iframe>
       </div>
 
       <div class="monitor-footer-controls">
@@ -1636,8 +1837,88 @@
       setTimeout(() => t.classList.remove('show'), 2600);
     }
 
-    async function sendRpc(method, extraParams = {}) {
-      const user = document.getElementById('rpcUser')?.value.trim() || 'Thí Chủ';
+    // =========================================================================
+    // AUDIO FEEDBACK & TACTILE RIPPLE KHI BẤM NÚT NGHI THỨC
+    // =========================================================================
+    let adminAudioCtx = null;
+    function playAdminChime() {
+      try {
+        if (!adminAudioCtx) {
+          adminAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (adminAudioCtx.state === 'suspended') adminAudioCtx.resume();
+        const osc = adminAudioCtx.createOscillator();
+        const gain = adminAudioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, adminAudioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, adminAudioCtx.currentTime + 0.15);
+        osc.frequency.exponentialRampToValueAtTime(440, adminAudioCtx.currentTime + 0.40);
+        gain.gain.setValueAtTime(0.20, adminAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, adminAudioCtx.currentTime + 0.40);
+        osc.connect(gain);
+        gain.connect(adminAudioCtx.destination);
+        osc.start();
+        osc.stop(adminAudioCtx.currentTime + 0.40);
+      } catch (_) {}
+    }
+
+    function createBtnRipple(btn, e) {
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ritual-ripple';
+      const size = Math.max(rect.width, rect.height) * 2;
+      ripple.style.width = ripple.style.height = `${size}px`;
+      const x = (e && e.clientX) ? e.clientX - rect.left - size / 2 : rect.width / 2 - size / 2;
+      const y = (e && e.clientY) ? e.clientY - rect.top - size / 2 : rect.height / 2 - size / 2;
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 700);
+    }
+
+    async function triggerRitual(btn, method, extraParams = {}, e = null) {
+      if (e) {
+        try { e.preventDefault(); } catch (_) {}
+      }
+      playAdminChime();
+      createBtnRipple(btn, e);
+
+      // Kích hoạt trạng thái hoạt ảnh rực rỡ trên nút
+      btn.classList.add('is-active');
+      const badge = btn.querySelector('.ritual-badge-pill');
+      if (badge) badge.textContent = '✨ Đang thực hiện...';
+
+      // Chuyển tiếp ngay lập tức sang các iframe xem trước (0ms latency direct postMessage)
+      const user = document.getElementById('rpcUser')?.value.trim() || 'Thí Chủ Minh Tâm';
+      const wish = document.getElementById('rpcWish')?.value.trim();
+      broadcastToFrames({
+        type: 'triggerRitualDirect',
+        method,
+        params: { user, wish, ...extraParams }
+      });
+
+      try {
+        const res = await sendRpc(method, extraParams, btn);
+        btn.classList.remove('is-active');
+        btn.classList.add('is-success');
+        if (badge) badge.textContent = '✅ Đã kích hoạt';
+        setTimeout(() => {
+          btn.classList.remove('is-success');
+          if (badge) badge.textContent = 'Sẵn sàng';
+        }, 2200);
+        return res;
+      } catch (err) {
+        btn.classList.remove('is-active');
+        if (badge) badge.textContent = 'Lỗi';
+        setTimeout(() => {
+          if (badge) badge.textContent = 'Sẵn sàng';
+        }, 2000);
+      }
+    }
+
+    async function sendRpc(method, extraParams = {}, triggerEl = null) {
+      const user = document.getElementById('rpcUser')?.value.trim() || 'Thí Chủ Minh Tâm';
       const wish = document.getElementById('rpcWish')?.value.trim();
       const body = {
         jsonrpc: '2.0',
@@ -1645,6 +1926,35 @@
         method,
         params: { user, wish, ...extraParams }
       };
+
+      // Tự động kích hoạt hiệu ứng nếu được gọi ngoài triggerRitual
+      if (!triggerEl && typeof document !== 'undefined') {
+        const matchingBtn = document.querySelector(`.ritual-btn[data-action*="${method.split('.')[1] || ''}"]`) || document.querySelector(`.ritual-btn[onclick*="${method}"]`);
+        if (matchingBtn && !matchingBtn.classList.contains('is-active')) {
+          createBtnRipple(matchingBtn);
+          playAdminChime();
+          matchingBtn.classList.add('is-active');
+          const badge = matchingBtn.querySelector('.ritual-badge-pill');
+          if (badge) badge.textContent = '✨ Đang thực hiện...';
+          setTimeout(() => {
+            matchingBtn.classList.remove('is-active');
+            matchingBtn.classList.add('is-success');
+            if (badge) badge.textContent = '✅ Đã kích hoạt';
+            setTimeout(() => {
+              matchingBtn.classList.remove('is-success');
+              if (badge) badge.textContent = 'Sẵn sàng';
+            }, 2000);
+          }, 800);
+        }
+      }
+
+      // Phát sóng trực tiếp tới Màn hình Live trong IFRAME
+      broadcastToFrames({
+        type: 'triggerRitualDirect',
+        method,
+        params: { user, wish, ...extraParams }
+      });
+
       try {
         const res = await fetch('/rpc', {
           method: 'POST',
@@ -1659,6 +1969,7 @@
         return data;
       } catch (err) {
         showToast(`❌ Lỗi: ${err.message}`);
+        throw err;
       }
     }
 
@@ -1804,6 +2115,27 @@
       if (badge) {
         badge.textContent = `Bối cảnh: ${SCENE_NAMES[sceneName] || sceneName}`;
       }
+    }
+
+    function broadcastToFrames(msg) {
+      const ifr = document.getElementById('monitorIframe');
+      const heroIfr = document.getElementById('heroLiveIframe');
+      if (ifr && ifr.contentWindow) {
+        try { ifr.contentWindow.postMessage(msg, '*'); } catch (_) {}
+      }
+      if (heroIfr && heroIfr.contentWindow) {
+        try { heroIfr.contentWindow.postMessage(msg, '*'); } catch (_) {}
+      }
+    }
+
+    function switch3DCamera(camKey) {
+      broadcastToFrames({ type: 'switchCamera', camera: camKey });
+      showToast(`🎥 Đã chuyển góc Camera 3D: ${camKey}`);
+    }
+
+    function switch3DAmbience(ambKey) {
+      broadcastToFrames({ type: 'switchAmbience', ambience: ambKey });
+      showToast(`🌅 Đã đổi thời khắc ánh sáng: ${ambKey}`);
     }
 
     async function selectScene(sceneName) {

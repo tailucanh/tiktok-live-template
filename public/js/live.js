@@ -108,8 +108,46 @@
 
   // Lắng nghe postMessage từ cửa sổ Admin để đổi cảnh tức thì 0ms
   window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'switchScene') {
-      applyScene(event.data.scene);
+    if (event.data) {
+      if (event.data.type === 'switchScene') {
+        applyScene(event.data.scene);
+      } else if (event.data.type === 'switchCamera' && window.Temple3D) {
+        window.Temple3D.switchCamera(event.data.camera);
+      } else if (event.data.type === 'switchAmbience' && window.Temple3D) {
+        window.Temple3D.switchAmbience(event.data.ambience);
+      } else if (event.data.type === 'switchSutra' && window.TempleChant) {
+        window.TempleChant.setSutra(event.data.sutra);
+      } else if (event.data.type === 'toggleAutoChant' && window.TempleChant) {
+        window.TempleChant.toggleAuto(event.data.enabled);
+      } else if (event.data.type === 'switchTemple' && window.TempleSelector) {
+        const t = window.VietnamTemples?.find((x) => x.id === event.data.templeId);
+        if (t) window.TempleSelector.selectTemple(t);
+      } else if (event.data.type === 'switchStatue' && window.Temple3D) {
+        window.Temple3D.switchStatue(event.data.statue);
+      } else if (event.data.type === 'triggerRitualDirect') {
+        const { method, params } = event.data;
+        const methodMap = {
+          'temple.burnIncense': 'burnIncense',
+          'temple.sendPrayer': 'sendPrayer',
+          'temple.strikeWoodenFish': 'strikeWoodenFish',
+          'temple.ringBell': 'ringBell',
+          'temple.drawFortune': 'drawFortune',
+          'temple.offerGift': 'offerGift',
+          'temple.grandCeremony': 'grandCeremony'
+        };
+        const evType = methodMap[method];
+        if (evType) {
+          triggerRitualVisuals({
+            type: evType,
+            user: params?.user || 'Thí Chủ Minh Tâm',
+            wish: params?.wish || 'Cầu bình an gia đạo',
+            count: params?.count || (evType === 'strikeWoodenFish' ? 9 : 3),
+            merit: (params?.count || 3) * 5,
+            giftName: params?.giftName || (evType === 'grandCeremony' ? 'Đại Lễ Kim Long Chầu Phật' : 'Mâm Ngũ Quả Cát Tường'),
+            topic: params?.topic || params?.wish || 'Cầu tài lộc, gia đạo bình an'
+          });
+        }
+      }
     }
   });
 
@@ -490,12 +528,29 @@
     document.getElementById('statIncense').textContent = Number(st.totalIncense || 0).toLocaleString('vi-VN');
     document.getElementById('statMerit').textContent = Number(st.totalMerit || 0).toLocaleString('vi-VN');
     document.getElementById('statWoodenFish').textContent = Number(st.woodenFishHits || 0).toLocaleString('vi-VN');
+    const statWoodenFishSub = document.getElementById('statWoodenFishSub');
+    if (statWoodenFishSub) statWoodenFishSub.textContent = Number(st.woodenFishHits || 0).toLocaleString('vi-VN');
 
     renderIncenseSticks(st.activeIncenseSticks || 9);
 
     const lb = Array.isArray(st.leaderboard) ? st.leaderboard : [];
     renderVipCushions(lb);
     renderCongregationHall(lb);
+
+    const statDevotees = document.getElementById('statDevoteeCount');
+    if (statDevotees) statDevotees.textContent = (lb.length > 0 ? lb.length : 24);
+
+    if (window.Temple3D && window.Temple3D.isInitialized && lb.length > 0) {
+      // Devotee Top 1 chính là Chủ Lễ trang nghiêm
+      const topDev = lb[0];
+      if (topDev && window.Temple3D.masterDevotee) {
+        window.Temple3D.masterDevotee.updateIdentity(topDev.name, topDev.merit);
+      }
+      // Các Phật tử từ hạng 2 trở đi lần lượt an tọa vào các bồ đoàn hai bên
+      for (let i = 1; i < lb.length; i++) {
+        window.Temple3D.handleViewerJoin(lb[i].name, lb[i].avatar);
+      }
+    }
 
 
     // Đồng bộ tên Chủ Lễ mặc định theo người dẫn đầu thực tế nếu chưa có sự kiện mới
@@ -605,14 +660,14 @@
       case 'burnIncense':
         return `🔥 <strong>${escapeHtml(ev.user)}</strong> dâng ${ev.count} nén nhang (+${ev.merit} CĐ)`;
       case 'strikeWoodenFish':
-        return `🪵 <strong>${escapeHtml(ev.user)}</strong> gõ mõ ${ev.count} nhịp (+${ev.merit} CĐ)`;
+        return `🥁 <strong>${escapeHtml(ev.user)}</strong> gõ mõ ${ev.count} nhịp (+${ev.merit} CĐ)`;
       case 'ringBell':
         return `🔔 <strong>${escapeHtml(ev.user)}</strong> thỉnh Đại Hồng Chung (+${ev.merit} CĐ)`;
       case 'sendPrayer':
         return `🏮 <strong>${escapeHtml(ev.user)}</strong> cầu phúc: “${escapeHtml(ev.wish)}”`;
       case 'offerGift':
       case 'grandCeremony':
-        return `🪷 <strong>${escapeHtml(ev.user)}</strong> dâng <em>${escapeHtml(ev.giftName)}</em> (+${ev.merit} CĐ)`;
+        return `🏵️ <strong>${escapeHtml(ev.user)}</strong> dâng <em>${escapeHtml(ev.giftName)}</em> (+${ev.merit} CĐ)`;
       case 'drawFortune':
         return `🎋 <strong>${escapeHtml(ev.user)}</strong> gieo được Quẻ số ${ev.fortune?.number} (${ev.fortune?.rank})`;
       default:
@@ -638,7 +693,7 @@
     toast.innerHTML = `
       <div class="welcome-avatar">${avatarHtml}</div>
       <div class="welcome-content">
-        <div class="welcome-title">🪷 ${escapeHtml(welcomeMsg)} 🪷</div>
+        <div class="welcome-title">🌸 ${escapeHtml(welcomeMsg)} 🌸</div>
         <div class="welcome-name">${escapeHtml(user)} • Nam Mô A Di Đà Phật</div>
       </div>
     `;
@@ -654,8 +709,49 @@
     }, 4800);
   }
 
+  // Phát sáng rực rỡ trên thanh Hotbar thẻ tâm linh
+  function pulseHotbarCard(cardId) {
+    const el = document.getElementById(cardId);
+    if (!el) return;
+    el.classList.remove('active-pulse');
+    void el.offsetWidth;
+    el.classList.add('active-pulse');
+    setTimeout(() => el.classList.remove('active-pulse'), 1400);
+  }
+
   function triggerRitualVisuals(ev) {
     if (!ev) return;
+
+    // Chuyển tiếp sự kiện sang Hệ thống 3D Game Play
+    if (window.Temple3D && window.Temple3D.isInitialized) {
+      if (ev.type === 'memberJoin') {
+        window.Temple3D.handleViewerJoin(ev.user, ev.avatar);
+      } else if (ev.type === 'strikeWoodenFish') {
+        window.Temple3D.handleStrikeWoodenFish(ev.count || 9);
+      } else if (ev.type === 'ringBell') {
+        window.Temple3D.handleRingBell();
+        window.Temple3D.triggerMassProstrationWave();
+      } else if (ev.type === 'sendPrayer') {
+        if (typeof window.Temple3D.handleSendPrayer === 'function') {
+          window.Temple3D.handleSendPrayer(ev.user, ev.wish);
+        }
+      } else if (ev.type === 'burnIncense' || ev.type === 'offerGift' || ev.type === 'grandCeremony') {
+        window.Temple3D.handleOfferingIncense(ev.user, ev.wish);
+        if (ev.type === 'grandCeremony') {
+          window.Temple3D.triggerMassProstrationWave();
+        }
+      } else if (ev.type === 'drawFortune') {
+        window.Temple3D.fortuneCylinder?.triggerShake();
+      }
+
+      // Hiện bong bóng thoại 3D nếu có lời khấn
+      if (ev.wish || ev.comment) {
+        const dev = window.Temple3D.activeDevotees.get(ev.user);
+        if (dev && typeof dev.speak === 'function') {
+          dev.speak(ev.wish || ev.comment);
+        }
+      }
+    }
 
     if (ev.type === 'memberJoin') {
       showWelcomeToast(ev.user, ev.avatar, ev.welcomeText);
@@ -668,6 +764,7 @@
 
     switch (ev.type) {
       case 'burnIncense': {
+        pulseHotbarCard('cardIncense');
         audio.playIncenseChime();
         particles.spawnIncenseBurst(540, 1180);
         particles.spawnFloatingMerit(`+${ev.merit} Công Đức`, 540, 1140, '#ffe082');
@@ -676,17 +773,28 @@
       }
 
       case 'strikeWoodenFish': {
-        audio.playWoodenFish();
-        pulseHallBowing();
-        triggerMonkStrike();
-        particles.spawnWoodenFishHeart(890, 940);
-        const praises = ['+1 Công Đức', 'Tâm An Lạc', 'Vạn Sự Như Ý', 'Cát Tường', 'Phước Dày', 'Bình An'];
-        const text = praises[Math.floor(Math.random() * praises.length)];
-        particles.spawnFloatingMerit(text, 890, 935, '#ffd54f');
+        pulseHotbarCard('cardWoodenFish');
+        const totalHits = Math.min(ev.count || 1, 9);
+        let currentHit = 0;
+        const hitInterval = setInterval(() => {
+          currentHit++;
+          audio.playWoodenFish();
+          pulseHallBowing();
+          triggerMonkStrike();
+          particles.spawnWoodenFishHeart(890, 940);
+          if (window.TempleChant && !window.TempleChant.isAutoChanting) {
+            window.TempleChant.step(false);
+          }
+          const praises = ['+1 Công Đức', 'Tâm An Lạc', 'Vạn Sự Như Ý', 'Cát Tường', 'Phước Dày', 'Bình An', 'Bồ Đề Tâm', 'Trí Tuệ Sáng', 'Thanh Tịnh'];
+          const text = praises[(currentHit - 1) % praises.length];
+          particles.spawnFloatingMerit(text, 890, 935, '#ffd54f');
+          if (currentHit >= totalHits) clearInterval(hitInterval);
+        }, 360);
         break;
       }
 
       case 'ringBell': {
+        pulseHotbarCard('cardBell');
         audio.playTempleBell(1.0);
         pulseHallBowing();
         particles.spawnBellWave(540, 510, 4);
@@ -696,6 +804,7 @@
       }
 
       case 'sendPrayer': {
+        pulseHotbarCard('cardBlessing');
         audio.playIncenseChime();
         spawnSkyLantern(ev.user, ev.wish);
         particles.spawnFloatingMerit(`+${ev.merit} Công Đức`, 540, 1260, '#ffb74d');
@@ -704,15 +813,17 @@
       }
 
       case 'offerGift': {
+        pulseHotbarCard('cardLotus');
         audio.playIncenseChime();
         audio.playTempleBell(0.85);
         particles.spawnIncenseBurst(540, 1180);
         particles.spawnFloatingMerit(`+${ev.merit} Công Đức`, 540, 1140, '#fff3b0');
-        animateWalkerOnCarpet(ev.user, ev.avatar, `🪷 Dâng ${ev.giftName} (+${ev.merit} CĐ)`, ev.wish);
+        animateWalkerOnCarpet(ev.user, ev.avatar, `🏵️ Dâng ${ev.giftName} (+${ev.merit} CĐ)`, ev.wish);
         break;
       }
 
       case 'grandCeremony': {
+        pulseHotbarCard('cardLotus');
         audio.playTempleBell(1.2);
         setTimeout(() => audio.playTempleBell(1.1), 900);
         particles.spawnGrandCeremonyRain();
@@ -723,6 +834,7 @@
       }
 
       case 'drawFortune': {
+        pulseHotbarCard('cardFortune');
         enqueueFortune(ev);
         break;
       }
@@ -874,6 +986,9 @@
   });
 
   function spawnSkyLantern(user, wish) {
+    if (window.SkyLanterns) {
+      window.SkyLanterns.spawnLantern(user, wish);
+    }
     const layer = document.getElementById('skyLanternsLayer');
     if (!layer) return;
     const lantern = document.createElement('div');
@@ -998,6 +1113,80 @@
       giftName: 'Đài Hoa Sen Vàng',
       wish
     });
+  });
+
+  document.getElementById('cardFortune')?.addEventListener('click', () => {
+    const { user, wish } = getFormInput();
+    callRpc('temple.drawFortune', { user, topic: wish });
+  });
+
+  document.getElementById('cardWoodenFish')?.addEventListener('click', () => {
+    const { user } = getFormInput();
+    triggerMonkStrike();
+    callRpc('temple.strikeWoodenFish', { user, count: 1 });
+  });
+
+  document.getElementById('cardBell')?.addEventListener('click', () => {
+    const { user, wish } = getFormInput();
+    callRpc('temple.ringBell', { user, count: 1, wish, readTts: true });
+  });
+
+  // Game Master: Camera Director
+  const camBtns = {
+    btnCamWide: 'wide',
+    btnCamAltar: 'altar',
+    btnCamMonk: 'monk',
+    btnCamOverhead: 'overhead'
+  };
+  Object.entries(camBtns).forEach(([btnId, camKey]) => {
+    document.getElementById(btnId)?.addEventListener('click', (e) => {
+      Object.keys(camBtns).forEach(id => document.getElementById(id)?.classList.remove('active-toggle'));
+      e.currentTarget.classList.add('active-toggle');
+      if (window.Temple3D) window.Temple3D.switchCamera(camKey);
+    });
+  });
+
+  // Game Master: Ambience & Time of Day
+  const ambBtns = {
+    btnAmbDay: 'day',
+    btnAmbSunset: 'sunset',
+    btnAmbNight: 'night',
+    btnAmbGolden: 'golden'
+  };
+  Object.entries(ambBtns).forEach(([btnId, ambKey]) => {
+    document.getElementById(btnId)?.addEventListener('click', (e) => {
+      Object.keys(ambBtns).forEach(id => document.getElementById(id)?.classList.remove('active-toggle'));
+      e.currentTarget.classList.add('active-toggle');
+      if (window.Temple3D) window.Temple3D.switchAmbience(ambKey);
+    });
+  });
+
+  // Game Master: Toggle 3D Game Play Mode
+  document.getElementById('btnToggle3DMode')?.addEventListener('click', (e) => {
+    const is3D = document.body.classList.toggle('game-mode-3d');
+    e.currentTarget.textContent = `🎮 Hoạt Hình 3D Game Play: ${is3D ? 'ĐANG BẬT' : 'TẮT'}`;
+    e.currentTarget.classList.toggle('active-toggle', is3D);
+  });
+
+  // Tụng Kinh Đồng Bộ Tiếng Mõ & Bộ Chọn 200 Ngôi Chùa
+  document.getElementById('selectBuddhaStatue')?.addEventListener('change', (e) => {
+    window.Temple3D?.switchStatue(e.target.value);
+  });
+
+  document.getElementById('selectChantSutra')?.addEventListener('change', (e) => {
+    window.TempleChant?.setSutra(e.target.value);
+  });
+
+  document.getElementById('btnToggleAutoChant')?.addEventListener('click', () => {
+    window.TempleChant?.toggleAuto();
+  });
+
+  document.getElementById('btnChantNext')?.addEventListener('click', () => {
+    window.TempleChant?.step(true);
+  });
+
+  document.getElementById('btnOpenTempleModal')?.addEventListener('click', () => {
+    window.TempleSelector?.show();
   });
 
   document.getElementById('woodenFishStation')?.addEventListener('click', () => {
